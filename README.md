@@ -1,5 +1,5 @@
 # UPTA - The Universal Public Transport Application
-UPTA is a technical demonstration utilizing the Solid Pod technology. The initial release is available in the **experimental** branch. No features are currently working, but at least it looks nice so far!
+UPTA is a technical demonstration utilizing the Solid Pod technology. No features are currently working, but at least it looks nice so far!
 
 Initial release built with NextJS create an app
 
