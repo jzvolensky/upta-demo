@@ -102,7 +102,7 @@ export default function Home() {
 
           <a
             //REPLACE WITH GITHUB REPO ONCE SETUP
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+            href="https://github.com/jzvolensky/upta-demo"
             className={styles.card}
             target="_blank"
             rel="noopener noreferrer"
