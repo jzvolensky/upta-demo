@@ -11,5 +11,12 @@ This application is being developed as a part of my master's thesis. The aim is 
 - Some QoL features such as timetables and bus locations (if possible, awaiting data access permissions)
 - A way to show GPS tracks captured from a phone on a map to see past journeys with costs included
 
+## Next steps
+- Finishing up the basic website features and looks
+- Major cleanup of the CSS files is required as there is a million classes not utilized
+- First implementation of Solid, for now focusing on proper login and Pod connection management
+- Creating two Solid Pods, generating a file and sending it to another Pod upon request
+- If successful, further QoL features such as maps are planned
+
 
 

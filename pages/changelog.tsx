@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from '@next/font/google'
-import styles from '../../styles/Home.module.css'
+import styles from '../styles/Home.module.css'
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
@@ -39,6 +39,14 @@ export default function Changelog() {
               <li> Initial release of the platform</li>
               <li> Creation of supporting subpages (About, Github, Solid, and Changelog)</li>
               <li> Added placeholder buttons for login functionality</li>  
+            </ul>
+          </div>
+          <div className={styles.changelog_entry}>    
+            <h2>Version 0.0.5 released: 03/01/2022</h2>
+            <h3>General changes:</h3>
+            <ul className={styles.changelog_list}>
+              <li>Completely reworked file structure for easier linking and further development</li>
+              <li>Initial login capabilities on the user portal page, requires restyling and a bit of polish</li>
             </ul>
           </div>
         </div>
