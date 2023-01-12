@@ -1,11 +1,23 @@
 import Head from 'next/head';
 import Layout from '../components/layout';
+import React from 'react';
+import { useEffect } from 'react';
+import ReactDOM from 'react-dom';
+import RouteView from '../components/RouteView'; 
+
 
 export default function User() {
+  useEffect(() => {
+    console.log(document.title);
+    console.log(document.getElementById('root'));
+  }, []);
 
       const title = "Welcome to the user page!"
 
       return (
+/* Need to do: Replace the Layout function with the RouteView.
+Transfer over elements from the layout to make sure RouteView
+Maintains the design features*/
           <Layout role="User">
             <Head>
                 <title>{title}</title>
@@ -28,7 +40,7 @@ Aenean laoreet fermentum vehicula. Suspendisse tempus dictum turpis, eget sagitt
                   </p>
                 </div>
           </Layout>
-      );
+    );
 }
 
 
