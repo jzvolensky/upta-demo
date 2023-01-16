@@ -1,3 +1,5 @@
+
+/* siteLayout.tsx styles */ 
 .container {
   max-width: 60rem;
   padding: 0 1rem;
@@ -9,6 +11,18 @@
   flex-direction: row;
   align-items: center;
   min-width: max-content;
+}
+
+.logo {
+  position: relative;
+}
+
+.headingM {
+  font-size: 2.5rem;
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: -0.05rem;
+  margin: 1rem 0;
 }
 
 .middle {
@@ -30,17 +44,4 @@
   border-top: 1px solid #eaeaea;
   justify-content: center;
   align-items: center;
-}
-
-.footer a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-grow: 1;
-}
-
-@media (prefers-color-scheme: dark) {
-  .footer {
-    border-color: #222;
-  }
 }

@@ -1,9 +1,9 @@
 import Head from 'next/head';
-import Layout from '../components/layout';
 import React from 'react';
 import { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import RouteView from '../components/RouteView'; 
+import Layout from '../components/siteLayout';
 
 
 export default function User() {

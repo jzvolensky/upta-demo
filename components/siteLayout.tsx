@@ -1,10 +1,9 @@
 import { SessionProvider } from "@inrupt/solid-ui-react";
 import Head from 'next/head';
 import Link from 'next/link';
-import Image from '../components/image';
-import styles from '../styles/layout.module.css';
-import utilStyles from '../styles/utils.module.css';
-import ConnectSolid from "./solidconnect";
+import Image from './image';
+import ConnectSolid from './solidconnect';
+import defLayout from '../styles/defaultlayout.module.css';
 
 const name = 'UPTA';
 export const siteTitle = 'UPTA Solid App';
@@ -15,9 +14,9 @@ export default function Layout({ children, home, role }: {
     role?: string,
 }) {
     return (
-        <div className={[styles.container, role].join(" ")}>
+        <div className={[defLayout.container, role].join(" ")}>
             <SessionProvider>
-
+                
                 <Head>
                     <link rel="icon" href="/favicon.ico" />
                     <meta
@@ -33,18 +32,18 @@ export default function Layout({ children, home, role }: {
                     <meta name="og:title" content={siteTitle} />
                     <meta name="twitter:card" content="summary_large_image" />
                 </Head>
-                <header className={styles.header}>
+                <header className={defLayout.header}>
                     {home ? (
                         <>
                             <Image
                                 priority
                                 src="/UPTAlogo.svg"
-                                className={utilStyles.borderCircle}
+                                className={defLayout.borderCircle}
                                 height={42}
                                 width={42}
                                 alt={name}
                             />
-                            <h1 className={utilStyles.heading2Xl}>{name}</h1>
+                            <h1 className={defLayout.headingM}>{name}</h1>
                         </>
                     ) : (
                         <>
@@ -53,7 +52,7 @@ export default function Layout({ children, home, role }: {
                                 <Image
                                     priority
                                     src="UPTAlogo.svg"
-                                    className={utilStyles.borderCircle}
+                                    className={defLayout.logo}
                                     height={100}
                                     width={150}
                                     alt={name}
@@ -62,24 +61,24 @@ export default function Layout({ children, home, role }: {
                             </Link>
                         </>
                     )}
-                    <div className={styles.middle} />
-                    <div className={styles.right}>
+                    <div className={defLayout.middle} />
+                    <div className={defLayout.right}>
                         <ConnectSolid />
                     </div>
                 </header>
                 <main>{children}</main>
                 {!home && (
-                    <div className={styles.backToHome}>
+                    <div className={defLayout.backToHome}>
                         <Link href="/">
-                            ← Back to homepage
+                            Back to homepage
                         </Link>
                     </div>
                     
                 )}
-                <footer className={styles.footer}>
+                <footer className={defLayout.footer}>
                     <a href="https://solidproject.org/" target="_blank" rel="noopener noreferrer">
                         Powered by{" "}
-                        <span className={styles.logo}>
+                        <span className={defLayout.logo}>
                             <Image
                                 src="/solid-emblem.svg"
                                 alt="Solid Project"
