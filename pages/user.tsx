@@ -18,7 +18,7 @@ export default function User() {
 /* Need to do: Replace the Layout function with the RouteView.
 Transfer over elements from the layout to make sure RouteView
 Maintains the design features*/
-          <Layout role="User">
+          /*<Layout role="User">
             <Head>
                 <title>{title}</title>
             </Head>
@@ -39,7 +39,10 @@ Aenean eu aliquet lorem, eu imperdiet erat. Nulla facilisi. Nam orci risus, vive
 Aenean laoreet fermentum vehicula. Suspendisse tempus dictum turpis, eget sagittis neque vehicula et. Aenean cursus elit odio, ornare porta neque ullamcorper in. Donec sed augue eu diam pretium tempor eu vel purus. In tempus facilisis dui, eget imperdiet mi porttitor vel. In eu mollis ex, at pellentesque erat. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aenean sed volutpat nisi. Suspendisse potenti. Pellentesque non consequat mi. 
                   </p>
                 </div>
-          </Layout>
+          </Layout> */
+          <RouteView>
+            
+          </RouteView>
     );
 }
 
