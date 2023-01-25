@@ -1,24 +1,22 @@
-import Head from 'next/head';
-import React from 'react';
-import { useEffect } from 'react';
-import ReactDOM from 'react-dom';
-import RouteView from '../components/RouteView'; 
-import Layout from '../components/siteLayout';
-
+import Head from "next/head";
+import React from "react";
+import { useEffect } from "react";
+import ReactDOM from "react-dom";
+import RouteView from "../components/RouteView";
+import Layout from "../components/siteLayout";
 
 export default function User() {
   useEffect(() => {
-    console.log(document.title);
-    console.log(document.getElementById('root'));
+    
   }, []);
 
-      const title = "Welcome to the user page!"
+  const title = "Welcome to the user page!";
 
-      return (
-/* Need to do: Replace the Layout function with the RouteView.
+  return (
+    /* Need to do: Replace the Layout function with the RouteView.
 Transfer over elements from the layout to make sure RouteView
 Maintains the design features*/
-          /*<Layout role="User">
+    /*<Layout role="User">
             <Head>
                 <title>{title}</title>
             </Head>
@@ -40,10 +38,6 @@ Aenean laoreet fermentum vehicula. Suspendisse tempus dictum turpis, eget sagitt
                   </p>
                 </div>
           </Layout> */
-          <RouteView>
-            
-          </RouteView>
-    );
+    <RouteView></RouteView>
+  );
 }
-
-

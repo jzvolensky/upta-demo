@@ -1,164 +1,88 @@
-import * as React from "react";
-import * as $rdf from "rdflib";
-import Layout from "./siteLayout";
+import * as XML from 'xml-js';
+import { useEffect, useState } from 'react';
+import { Select } from '@mui/material';
+import { MenuItem } from '@mui/material';
+import { Button } from '@mui/material';
 
-interface IRoute {
-  id: number;
-  name: string;
-  description: string;
+interface INetexTimetable {
+  elements: [{
+      type: 'element',
+      name: 'netex:data',
+      elements: [{
+          type: 'element',
+          name: 'netex:serviceFrame',
+          elements: [{
+              type: 'element',
+              name: 'netex:services',
+              elements: [{
+                  type: 'element',
+                  name: 'netex:service',
+                  elements: Array<{
+                      type: 'element',
+                      name: 'netex:routeShortName'
+                  }>
+              }]
+          }]
+      }]
+  }]
 }
 
-interface IState {
-  routes: IRoute[];
-  selectedRoute: IRoute | null;
+async function getTimetable() {
+    try {
+        const response = await fetch('https://uptacompany.solidcommunity.net/public/Routes/RouteTest.xml');
+        const xml = await response.text();
+        console.log(xml);
+        const json = XML.xml2js(xml, {compact: true});
+        console.log(json);
+        return json;
+    } catch (error) {
+        console.error(error);
+        return {};
+    }
 }
 
-class App extends React.Component<{}, IState> {
-  private store = new $rdf.IndexedFormula();
-  private updater = new $rdf.UpdateManager(this.store);
+function MyComponent() {
+    const [timetable, setTimetable] = useState({});
+    const [routes, setRoutes] = useState([]);
+    const [selectedRoute, setSelectedRoute] = useState('');
 
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      routes: [],
-      selectedRoute: null,
-    };
-  }
-  // IMPLEMENTATION FOR XML, NEEDS TO BE WORKED ON. DUTCH OPEN DATA IS IN XML FORMAT SO THIS IS THE WAY TO GO, NEED TO REWORK THE JSON STUFF
-  async componentDidMount() {
-    // request data from pod
-    const response = await fetch(
-      "https://uptacompany.solidcommunity.net/public/Routes/RouteTest.xml"
-    );
-    const text = await response.text();
-    // parse the xml data
-    const parser = new DOMParser();
-    const xml = parser.parseFromString(text, "application/xml");
-    // get the routes
-    const routes: IRoute[] = [];
-    const routeNodes = xml.getElementsByTagName("gml:pos");
-    for (let i = 0; i < routeNodes.length; i++) {
-      const routeNode = routeNodes[i];
-      const operator = routeNode.getAttribute("Operator");
-      const number = routeNode.getAttribute("number");
-      const route = routeNode.getAttribute("routePoints");
-      //const description = routeNode.textContent;
-      routes.push({ operator, number, route });
-    }
-    this.setState({ routes });
-  }
+    useEffect(() => {
+        getTimetable().then(json => {
+            setTimetable(json);
+            // Extract routes from json
+            const routes = json.elements[0].elements[0].elements[0].elements[0].elements.map(
+              service => service.elements[0].text
+          );
+            setRoutes(routes);
+        });
+    }, []);
 
-  handleRouteSelection = (route: IRoute) => {
-    this.setState({ selectedRoute: route });
-  };
+    function handleRouteChange(event) {
+        setSelectedRoute(event.target.value);
+    }
 
-  handleSave = async () => {
-    // check if a route is selected
-    if (!this.state.selectedRoute) {
-      console.log("No route selected");
-      return;
+    function handleSave() {
+        // Save the selected route to the user's Solid Pod
+        // ...
     }
-    // get the data to save
-    const route = this.state.selectedRoute;
-    const data = JSON.stringify(route);
-    const contentType = "application/json";
-    // create a URL for the file to save in the user's pod
-    const fileUrl = `https://userpod.com/route-${route.id}.json`;
-    // create a symbol for the file
-    const graph = $rdf.sym(fileUrl);
-    // save the data
-    await this.updater.put(graph, data, contentType, (response: any) => {
-      if (response.status === 201) {
-        console.log("Route saved successfully");
-      } else {
-        console.log("Error saving route");
-      }
-    });
-  };
 
-  /*async componentDidMount() {
-    // request routes data from pod
-    const response = await fetch('https://uptacompany.solidcommunity.net/public/Routes/RouteTest.xml');
-    const routes = await response.json();
-    this.setState({ routes });
-  }
-
-  handleRouteSelection = (route: IRoute) => {
-    this.setState({ selectedRoute: route });
-  }
-
-  handleSave = async () => {
-    // check if a route is selected
-    if (!this.state.selectedRoute) {
-      console.log('No route selected');
-      return;
-    }
-    // get the data to save
-    const route = this.state.selectedRoute;
-    const timestamp = new Date().toISOString();
-    const data = {
-      route,
-      timestamp,
-    }
-    const dataString = JSON.stringify(data);
-    const contentType = "application/json";
-    // create a URL for the file to save in the user's pod
-    const fileUrl = `https://userpod.com/route-${route.id}.json`;
-    // create a symbol for the file
-    const graph = $rdf.sym(fileUrl);
-    // save the data
-    await this.updater.put(graph, dataString, contentType, (response: any) => {
-      if (response.status === 201) {
-        console.log('Route saved successfully');
-      } else {
-        console.log('Error saving route');
-      }
-    });
-  }
-  /* POSSIBLE IMPLEMENTATION OF A PDF VERSION FOR BETTER VIEWING e.g MOBILE, XML TICKETS SEEM A BIT TOO CONFUSING
-  handleSave = async () => {
-    // check if a route is selected
-    if (!this.state.selectedRoute) {
-      console.log('No route selected');
-      return;
-    }
-    // get the data to save
-    const route = this.state.selectedRoute;
-    const timestamp = new Date().toISOString();
-    const data = {
-      route,
-      timestamp,
-    }
-    // create a pdf document
-    const pdf = new jsPDF();
-    pdf.text(JSON.stringify(data), 10, 10);
-    // create a URL for the file to save in the user's pod
-    const fileUrl = `https://userpod.com/route-${route.id}.pdf`;*/
-  render() {
     return (
-      <Layout>
         <div>
-          <h1>Travel Routes</h1>
-          <ul>
-            {this.state.routes.map((route) => (
-              <li
-                key={route.id}
-                onClick={() => this.handleRouteSelection(route)}
-              >
-                {route.name}
-              </li>
-            ))}
-          </ul>
-          {this.state.selectedRoute && (
-            <div>
-              <h2>Selected Route</h2>
-              <p>Name: {this.state.selectedRoute.name}</p>
-              <p>Description: {this.state.selectedRoute.description}</p>
-            </div>
-          )}
+            <Select
+                labelId="route-select-label"
+                id="route-select"
+                value={selectedRoute}
+                onChange={handleRouteChange}
+            >
+                {routes.map(route => (
+                    <MenuItem value={route}>{route}</MenuItem>
+                ))}
+            </Select>
+            <Button variant="contained" color="primary" onClick={handleSave}>
+                Save
+            </Button>
         </div>
-      </Layout>
     );
-  }
 }
-export default App;
+
+export default MyComponent;
