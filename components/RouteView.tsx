@@ -1,8 +1,17 @@
 import * as XML from 'xml-js';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Select } from '@mui/material';
 import { MenuItem } from '@mui/material';
 import { Button } from '@mui/material';
+
+/*TODO: Add Solid authentification logic
+    1. Check if a user is logged in
+    2. If yes, good job
+    3. If not, notify the user to login
+    4. Pick a route
+    5. ???
+    6. Profit
+*/
 
 interface INetexTimetable {
   elements: [{
@@ -49,36 +58,28 @@ function MyComponent() {
     useEffect(() => {
         getTimetable().then(json => {
             setTimetable(json);
-            // Extract routes from json
-            const routes = json.elements[0].elements[0].elements[0].elements[0].elements.map(
-              service => service.elements[0].text
-          );
+            const jsonString = JSON.stringify(json);
+            console.log('JSON string success');
+            // Parsing the routes from json
+            const jsonParsed = JSON.parse(jsonString);
+            console.log('JSON parsed!')
             setRoutes(routes);
         });
     }, []);
-
-    function handleRouteChange(event) {
-        setSelectedRoute(event.target.value);
-    }
-
-    function handleSave() {
-        // Save the selected route to the user's Solid Pod
-        // ...
-    }
-
+            
     return (
         <div>
             <Select
                 labelId="route-select-label"
                 id="route-select"
                 value={selectedRoute}
-                onChange={handleRouteChange}
+                
             >
                 {routes.map(route => (
                     <MenuItem value={route}>{route}</MenuItem>
                 ))}
             </Select>
-            <Button variant="contained" color="primary" onClick={handleSave}>
+            <Button variant="contained" color="primary" /*onClick={handleSave}*/>
                 Save
             </Button>
         </div>
