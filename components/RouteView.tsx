@@ -35,7 +35,25 @@ interface INetexTimetable {
       }]
   }]
 }
+/* TODO: The following code is supposed to load in a Netex route file obtained from 
+   https://reisinformatiegroep.nl/ndovloket/datacollecties
 
+   The getTimetable function works as far as I can tell, the file and even its json translation
+   are printed in the console.
+
+   What does NOT work is selecting the right tags/classes from the JSON timetable.
+   I dont know why. The whole timetable thing is confusing and is only in Dutch, which does not help.
+   Furthermore this is only a test sample, where the locations are coded instead of named,
+   so to make it completely work, there is supposed to be a dataset with all the codings and what they mean.
+   I have not been able to find it on the website above
+
+   As per an online suggestion I tried to use an interface element to specify the json, however, to be
+   honest I have no idea what I am doing so it does not nothing at this point.
+
+   The ideal workflow should be load the route file(s) from a Pod > turn them into a json >
+   modify the output so its readable by the user > allow them to select one and save it to their Pod.
+
+*/
 async function getTimetable() {
     try {
         const response = await fetch('https://uptacompany.solidcommunity.net/public/Routes/RouteTest.xml');
