@@ -13,28 +13,6 @@ import { Button } from '@mui/material';
     6. Profit
 */
 
-interface INetexTimetable {
-  elements: [{
-      type: 'element',
-      name: 'netex:data',
-      elements: [{
-          type: 'element',
-          name: 'netex:serviceFrame',
-          elements: [{
-              type: 'element',
-              name: 'netex:services',
-              elements: [{
-                  type: 'element',
-                  name: 'netex:service',
-                  elements: Array<{
-                      type: 'element',
-                      name: 'netex:routeShortName'
-                  }>
-              }]
-          }]
-      }]
-  }]
-}
 /* TODO: The following code is supposed to load in a Netex route file obtained from 
    https://reisinformatiegroep.nl/ndovloket/datacollecties
 
@@ -54,36 +32,32 @@ interface INetexTimetable {
    modify the output so its readable by the user > allow them to select one and save it to their Pod.
 
 */
-async function getTimetable() {
-    try {
-        const response = await fetch('https://uptacompany.solidcommunity.net/public/Routes/RouteTest.xml');
-        const xml = await response.text();
-        console.log(xml);
-        const json = XML.xml2js(xml, {compact: true});
-        console.log(json);
-        return json;
-    } catch (error) {
-        console.error(error);
-        return {};
-    }
-}
+
 
 function MyComponent() {
     const [timetable, setTimetable] = useState({});
     const [routes, setRoutes] = useState([]);
     const [selectedRoute, setSelectedRoute] = useState('');
 
+    
     useEffect(() => {
-        getTimetable().then(json => {
-            setTimetable(json);
-            const jsonString = JSON.stringify(json);
-            console.log('JSON string success');
-            // Parsing the routes from json
-            const jsonParsed = JSON.parse(jsonString);
-            console.log('JSON parsed!')
-            setRoutes(routes);
-        });
-    }, []);
+            (async () => {
+                try{
+                    const result = await fetch("https://dienstregeling-api.9292.nl/Example/LinesResponse", {
+                        method: "GET",
+                        headers: {
+                            accept: 'text/plain'
+                        }
+                    })
+                    const data = await result.json();
+                    console.log(data)
+    
+                }
+                catch (e) {
+                    console.log(e)
+                }
+            })()
+        }, [])
             
     return (
         <div>
