@@ -54,36 +54,33 @@ interface INetexTimetable {
    modify the output so its readable by the user > allow them to select one and save it to their Pod.
 
 */
-async function getTimetable() {
-    try {
-        const response = await fetch('https://uptacompany.solidcommunity.net/public/Routes/RouteTest.xml');
-        const xml = await response.text();
-        console.log(xml);
-        const json = XML.xml2js(xml, {compact: true});
-        console.log(json);
-        return json;
-    } catch (error) {
-        console.error(error);
-        return {};
-    }
-}
 
-function MyComponent() {
+function RouteView() {
     const [timetable, setTimetable] = useState({});
     const [routes, setRoutes] = useState([]);
     const [selectedRoute, setSelectedRoute] = useState('');
 
     useEffect(() => {
-        getTimetable().then(json => {
-            setTimetable(json);
-            const jsonString = JSON.stringify(json);
-            console.log('JSON string success');
-            // Parsing the routes from json
-            const jsonParsed = JSON.parse(jsonString);
-            console.log('JSON parsed!')
-            setRoutes(routes);
-        });
-    }, []);
+        (async () => {
+            try{
+                const result = await fetch("https://dienstregeling-api.9292.nl/Example/LinesResponse", {
+                    method: "GET",
+                    headers: {
+                        accept: 'text/plain'
+                    }
+                })
+                const data = await result.json();
+                console.log(data)
+
+            }
+            catch (e) {
+                console.log(e)
+            }
+        })()
+    }, [])
+
+
+
             
     return (
         <div>
@@ -104,4 +101,4 @@ function MyComponent() {
     );
 }
 
-export default MyComponent;
+export default RouteView;
