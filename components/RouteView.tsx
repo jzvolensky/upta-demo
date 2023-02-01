@@ -1,103 +1,129 @@
-import * as XML from 'xml-js';
-import React, { useEffect, useState } from 'react';
-import { Select } from '@mui/material';
-import { MenuItem } from '@mui/material';
-import { Button } from '@mui/material';
+import React, {FC, useEffect, useState} from 'react';
+import styled from "styled-components";
+import Select from 'react-select';
 
-/*TODO: Add Solid authentification logic
-    1. Check if a user is logged in
-    2. If yes, good job
-    3. If not, notify the user to login
-    4. Pick a route
-    5. ???
-    6. Profit
-*/
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  padding: 24px;
+  flex: 1;
+  align-items: center;
+  padding-bottom: 520px;
+`
 
-interface INetexTimetable {
-  elements: [{
-      type: 'element',
-      name: 'netex:data',
-      elements: [{
-          type: 'element',
-          name: 'netex:serviceFrame',
-          elements: [{
-              type: 'element',
-              name: 'netex:services',
-              elements: [{
-                  type: 'element',
-                  name: 'netex:service',
-                  elements: Array<{
-                      type: 'element',
-                      name: 'netex:routeShortName'
-                  }>
-              }]
-          }]
-      }]
-  }]
+const StyledSelect = styled(Select)`
+    width: 240px;
+  margin-right: 24px;
+`;
+
+const Button = styled.div`
+    display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  border-radius: 16px;
+  background-color: pink;
+`
+
+const getStopsData = async () => {
+    try{
+        const result = await fetch("https://opendata.bratislava.sk/api/mhd/stationstop/", {
+            method: "GET",
+            headers: {
+                'key': "hG0ceE5wYbxyh4R2vQndCLU5zMng2o6vIC75Me4n6kl9lrni8Z3bLoyS0TtVcQCJ51XQK8GIIXB8ArwZlyM6RoLXhKp6r5pDRJyle149BrJOGwDMCpWFNyIwvLNO3qHS91mMVfl4MIKXMAH3GBAbBeDz8q9cGdWdgtAWfNxctwUq4vylFxBwvG64c4E3KcQfbYQSTwjcuqSTjr1ypcdzvFhN3J9Mg43qNlrbjK8t0r4ciDXzVv4bTW63mP",
+            },
+        })
+        const data = await result.json();
+        return (data)
+    }
+    catch (e) {
+        console.log(e)
+    }
 }
-/* TODO: The following code is supposed to load in a Netex route file obtained from 
-   https://reisinformatiegroep.nl/ndovloket/datacollecties
 
-   The getTimetable function works as far as I can tell, the file and even its json translation
-   are printed in the console.
+type TFullTicketData = {
+    from: string;
+    to: string;
+    createdAt: string;
+    expiryDate: string;
+    gpsFromStation?: TCoordinates;
+    gpsToStation?: TCoordinates;
+}
 
-   What does NOT work is selecting the right tags/classes from the JSON timetable.
-   I dont know why. The whole timetable thing is confusing and is only in Dutch, which does not help.
-   Furthermore this is only a test sample, where the locations are coded instead of named,
-   so to make it completely work, there is supposed to be a dataset with all the codings and what they mean.
-   I have not been able to find it on the website above
+type TSelectItem = {value: TCoordinates, label: string}
 
-   As per an online suggestion I tried to use an interface element to specify the json, however, to be
-   honest I have no idea what I am doing so it does not nothing at this point.
+type TCoordinates = {
+    gpsLat: number;
+    gpsLon: number;
+}
 
-   The ideal workflow should be load the route file(s) from a Pod > turn them into a json >
-   modify the output so its readable by the user > allow them to select one and save it to their Pod.
+const RouteView:FC = ()  => {
+    const [routesData, setRoutesData] = useState([]);
+    // State pre obe zastavky
+    const [fromStationName, setFromStationName] = useState('');
+    const [fromStationGps, setFromStationGps] = useState<TCoordinates | undefined>();
 
-*/
+    const [toStationName, setToStationName] = useState('');
+    const [toStationGps, setToStationGps] = useState<TCoordinates | undefined>();
 
-function RouteView() {
-    const [timetable, setTimetable] = useState({});
-    const [routes, setRoutes] = useState([]);
-    const [selectedRoute, setSelectedRoute] = useState('');
+    const [fullTicketData, setFullTicketData] = useState<TFullTicketData | null>(null)
 
     useEffect(() => {
         (async () => {
-            try{
-                const result = await fetch("https://dienstregeling-api.9292.nl/Example/LinesResponse", {
-                    method: "GET",
-                    headers: {
-                        accept: 'text/plain'
-                    }
-                })
-                const data = await result.json();
-                console.log(data)
-
-            }
-            catch (e) {
-                console.log(e)
-            }
+            const fetchedData = await getStopsData();
+            console.log(fetchedData)
+            setRoutesData(fetchedData)
         })()
-    }, [])
+    }, []);
+
+    const getSelectOptions = (data: any[]):{value: TCoordinates, label: string}[] => {
+        if(!routesData){
+            return []
+        }
+        const newData = data.map((stop) => ({label: stop.name, value: {gpsLon: stop.gpsLon, gpsLat: stop.gpsLat}}));
+        // Pokus o unique zastavky
+        // const unique = newData.filter((value, index, self) => {
+        //     return self.findIndex(v => v.label === v.label) === index;
+        // })
+
+        return newData;
+    }
+
+    const options = getSelectOptions(routesData);
+
+    const onSaveClick = () => {
+        const ticketData: TFullTicketData = {
+            from: fromStationName, to: toStationName,
+            createdAt: new Date().toISOString(),
+            expiryDate: new Date().toISOString(),
+            gpsFromStation: fromStationGps,
+            gpsToStation: toStationGps
+        }
+        // Tu to posli do severa alebo do mapy
+        setFullTicketData(ticketData);
+    }
+
+    const onFromSelect = (data: any) => {
+        setFromStationName((data as TSelectItem).label);
+        setFromStationGps((data as TSelectItem).value);
+    }
+
+    const onToSelect = (data: any) => {
+        setToStationName((data as TSelectItem).label);
+        setToStationGps((data as TSelectItem).value);
+    }
 
 
 
-            
     return (
-        <div>
-            <Select
-                labelId="route-select-label"
-                id="route-select"
-                value={selectedRoute}
-                
-            >
-                {routes.map(route => (
-                    <MenuItem value={route}>{route}</MenuItem>
-                ))}
-            </Select>
-            <Button variant="contained" color="primary" /*onClick={handleSave}*/>
-                Save
-            </Button>
-        </div>
+        <Wrapper>
+            <StyledSelect options={options} onChange={onFromSelect} />
+            <StyledSelect options={options} onChange={onToSelect} />
+            <Button onClick={onSaveClick}>Save</Button>
+
+            {!!fullTicketData &&  <div>{JSON.stringify(fullTicketData)}</div>}
+        </Wrapper>
     );
 }
 
