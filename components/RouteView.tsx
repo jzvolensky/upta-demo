@@ -4,9 +4,7 @@ import Select from 'react-select';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxgl from 'mapbox-gl';
 
-//MAPBOX TOKEN
-//sk.eyJ1IjoicG90YXRvODQiLCJhIjoiY2xkbTU3YWVnMDYzdDNwcWxrY2ZnOGw4eCJ9.kh9fd_v-psgZMwPwKYuFog
-mapboxgl.accessToken = 'sk.eyJ1IjoicG90YXRvODQiLCJhIjoiY2xkbTU3YWVnMDYzdDNwcWxrY2ZnOGw4eCJ9.kh9fd_v-psgZMwPwKYuFog'
+
 
 //add map here
 
