@@ -1,6 +1,14 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useEffect, useRef, useState} from 'react';
 import styled from "styled-components";
 import Select from 'react-select';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import mapboxgl from 'mapbox-gl';
+
+//MAPBOX TOKEN
+//sk.eyJ1IjoicG90YXRvODQiLCJhIjoiY2xkbTU3YWVnMDYzdDNwcWxrY2ZnOGw4eCJ9.kh9fd_v-psgZMwPwKYuFog
+mapboxgl.accessToken = 'sk.eyJ1IjoicG90YXRvODQiLCJhIjoiY2xkbTU3YWVnMDYzdDNwcWxrY2ZnOGw4eCJ9.kh9fd_v-psgZMwPwKYuFog'
+
+//add map here
 
 const Wrapper = styled.div`
   display: flex;
@@ -83,11 +91,12 @@ const RouteView:FC = ()  => {
         }
         const newData = data.map((stop) => ({label: stop.name, value: {gpsLon: stop.gpsLon, gpsLat: stop.gpsLat}}));
         // Pokus o unique zastavky
-        // const unique = newData.filter((value, index, self) => {
-        //     return self.findIndex(v => v.label === v.label) === index;
+        const key = "label"
+        const unique = [...new Map(newData.map(item => [item[key], item])).values()];
+        console.log(unique)     
         // })
 
-        return newData;
+        return unique;
     }
 
     const options = getSelectOptions(routesData);
