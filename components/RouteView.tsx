@@ -1,12 +1,15 @@
 import React, {FC, useEffect, useRef, useState} from 'react';
 import styled from "styled-components";
 import Select from 'react-select';
-import 'mapbox-gl/dist/mapbox-gl.css';
-import mapboxgl from 'mapbox-gl';
+import { login, handleIncomingRedirect, getDefaultSession, fetch,} from "@inrupt/solid-client-authn-browser";
+import {saveFileInContainer} from "@inrupt/solid-client";
+import { SCHEMA_INRUPT, RDF } from "@inrupt/vocab-common-rdf";
+import { useSession, CombinedDataProvider, SessionProvider } from "@inrupt/solid-ui-react";
+import { getInteger, getSolidDataset, getThingAll, saveSolidDatasetAt,} from '@inrupt/solid-client';
 
 
 
-//add map here
+
 
 const Wrapper = styled.div`
   display: flex;
@@ -19,18 +22,23 @@ const Wrapper = styled.div`
 
 const StyledSelect = styled(Select)`
     width: 240px;
-  margin-right: 24px;
+  margin-right: 12px;
 `;
 
 const Button = styled.div`
-    display: flex;
+  display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  padding: 24px;
-  border-radius: 16px;
-  background-color: pink;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: purple;
 `
+
+
+
+
+
 
 const getStopsData = async () => {
     try{
@@ -92,7 +100,6 @@ const RouteView:FC = ()  => {
         const key = "label"
         const unique = [...new Map(newData.map(item => [item[key], item])).values()];
         console.log(unique)     
-        // })
 
         return unique;
     }
@@ -121,17 +128,29 @@ const RouteView:FC = ()  => {
         setToStationGps((data as TSelectItem).value);
     }
 
+    console.log(routesData)
+    
 
 
-    return (
-        <Wrapper>
+    async function savedTicketFile(){
+        const savedTicket = await saveFileInContainer(
+            "https://jzvolensky.solidcommunity.net/public/upta_tickets",
+            new Blob(["testing 123"], { type: "application/json"}),
+            { slug: "tickettest.json", contentType: "application/json", fetch: fetch}
+        );
+    }
+    
+return (
+        <div>
             <StyledSelect options={options} onChange={onFromSelect} />
             <StyledSelect options={options} onChange={onToSelect} />
             <Button onClick={onSaveClick}>Save</Button>
-
+            <Button onClick={savedTicketFile}>Save To Pod</Button>
             {!!fullTicketData &&  <div>{JSON.stringify(fullTicketData)}</div>}
-        </Wrapper>
+        </div>
     );
 }
+    
 
 export default RouteView;
+

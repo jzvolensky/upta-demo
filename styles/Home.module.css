@@ -7,6 +7,13 @@
   min-height: 100vh;
 }
 
+.routeView {
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+  min-height: 200px;
+}
+
 .description {
   display: inherit;
   justify-content: inherit;

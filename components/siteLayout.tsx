@@ -4,6 +4,8 @@ import Link from "next/link";
 import Image from "./image";
 import ConnectSolid from "./solidconnect";
 import defLayout from "../styles/defaultlayout.module.css";
+import RouteView from "./RouteView";
+
 
 const name = "UPTA";
 export const siteTitle = "UPTA Solid App";
@@ -72,7 +74,11 @@ export default function Layout({
           <div className={defLayout.backToHome}>
             <Link href="/">Back to homepage</Link>
           </div>
+            
         )}
+        <div>
+          <RouteView />
+        </div>
         <footer className={defLayout.footer}>
           <a
             href="https://solidproject.org/"
@@ -94,3 +100,4 @@ export default function Layout({
     </div>
   );
 }
+
