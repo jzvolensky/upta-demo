@@ -8,6 +8,7 @@ import { getInteger, getSolidDataset, getThingAll, saveSolidDatasetAt,} from '@i
 import { fetch, handleIncomingRedirect } from '@inrupt/solid-client-authn-browser';
 import { useSession } from "@inrupt/solid-ui-react";
 
+
 export default function User() {
   
   const { session } = useSession();
@@ -51,7 +52,6 @@ export default function User() {
                 <p>POD url: {podUrl}</p>
               </div>
             }
-
       </Layout>
       
     </div>

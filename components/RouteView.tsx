@@ -130,6 +130,7 @@ const RouteView:FC = ()  => {
 
     console.log(routesData)
     
+    console.log(fullTicketData)
 
 
     async function savedTicketFile(){
@@ -139,18 +140,21 @@ const RouteView:FC = ()  => {
             { slug: "tickettest.json", contentType: "application/json", fetch: fetch}
         );
     }
+
+   
     
 return (
-        <div>
+        <Wrapper>
             <StyledSelect options={options} onChange={onFromSelect} />
             <StyledSelect options={options} onChange={onToSelect} />
             <Button onClick={onSaveClick}>Save</Button>
             <Button onClick={savedTicketFile}>Save To Pod</Button>
             {!!fullTicketData &&  <div>{JSON.stringify(fullTicketData)}</div>}
-        </div>
+        </Wrapper>
     );
 }
     
+
 
 export default RouteView;
 
